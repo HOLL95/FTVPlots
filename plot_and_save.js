@@ -316,7 +316,7 @@ async function plot(event){
     const fp=new Dygraph(document.getElementById(`graph${num_harmonics+2}`), 
     FT_plot, FT_plot_opts,
     );
-    plotstore.push(fp)
+    
     plotstore.push(pp)
     plotstore.push(cp)
     
@@ -342,7 +342,7 @@ async function plot(event){
             );
         plotstore.push(hp)
     }
-    
+    plotstore.push(fp)
     return values;
 }
 async function saveallplot(event){
@@ -353,12 +353,8 @@ async function saveallplot(event){
         return;
     }
     const promises = plotstore.map((graph, index) => 
-                html2canvas(document.getElementById(`graph${index}`),
-                {
-                    logging: false,
-                    height: 400
-                }
-            
+                html2canvas(document.getElementById(`graph${index+1}`),
+          
                 ).then(canvas => {
                     return new Promise(resolve => {
                         canvas.toBlob(blob => {
