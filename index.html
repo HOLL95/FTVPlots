@@ -409,11 +409,21 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 <script type="module">
-await init('./biquad_wasm_bg.wasm');
 import init, * as wasm from './biquad_wasm.js';
-window.plot = plot;
-window.saveallplot=saveallplot;
-window.savecsv=savecsv;
+
+async function initialize() {
+
+  await init('./biquad_wasm_bg.wasm');
+  window.wasm = wasm;
+  window.plot = (args) => plot(args, wasm);
+  window.saveallplot = (args) => saveallplot(args, wasm);
+  window.savecsv = (args) => savecsv(args, wasm);
+
+  console.log("Wasm module initialized and functions set up");
+}
+
+// Call the initialize function
+initialize().catch(console.error);
 
 
 </script>
