@@ -409,12 +409,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 <script type="module">
- 
-import init, * as wasm from './biquad_wasm/pkg/biquad_wasm.js';
+await init('./biquad_wasm_bg.wasm');
+import init, * as wasm from './biquad_wasm.js';
 window.plot = plot;
 window.saveallplot=saveallplot;
 window.savecsv=savecsv;
 
-init()
+
 </script>
 </html>

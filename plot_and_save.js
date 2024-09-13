@@ -2,7 +2,7 @@ async function plot(event){
     console.time("plotting")
     datastore=[];
     plotstore=[];
-    await init('./biquad_wasm/pkg/biquad_wasm_bg.wasm');
+    await init('./biquad_wasm_bg.wasm');
 
     const values = {};
     // Create the first two side-by-side plots (first row)
