@@ -281,7 +281,7 @@
 <div class="main-container">
     <div class="left-panel">
         <button class="add-file-btn" onclick="addFilePanel()">Add File</button>
-        <button class ="plot-btn" onclick="plot()">PLOT</button>
+        <button class ="plot-btn" id="plotbutt">PLOT</button>
         <button class ="plotsave-btn", id="plotsave", onclick="saveallplot()">Save plots</button>
         <button class ="tocsv-btn", id="csvsave", onclick="savecsv()">Save data</button>
         <div id="file-panels"></div>
@@ -401,6 +401,11 @@ document.addEventListener('DOMContentLoaded', function() {
             xaxis.value = 'Time';
             updateParameters();
             savecsvbutton();
+            const plotButton = document.getElementById('plotbutt');
+            plotButton.addEventListener('click', function(event) {
+                console.log("Plot button clicked");
+                plot(event);
+            });
         });      
        
     

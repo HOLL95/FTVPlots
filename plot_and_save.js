@@ -1,5 +1,5 @@
 async function plot(event){
-    console.log("Plot function started");
+    console.time("plotting")
     datastore=[];
     plotstore=[];
     
@@ -343,7 +343,7 @@ async function plot(event){
         plotstore.push(hp)
     }
     
-    console.log("Plot function ended");
+    return values;
 }
 async function saveallplot(event){
     const savebtn= document.getElementById('plotsave');
