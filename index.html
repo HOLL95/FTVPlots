@@ -420,9 +420,9 @@ async function initialize() {
 
   await init('./biquad_wasm_bg.wasm');
   window.wasm = wasm;
-  window.plot = (args) => plot(args, wasm);
-  window.saveallplot = (args) => saveallplot(args, wasm);
-  window.savecsv = (args) => savecsv(args, wasm);
+  window.plot =plot;
+  window.saveallplot = saveallplot;
+  window.savecsv = savecsv;
 
   console.log("Wasm module initialized and functions set up");
 }
