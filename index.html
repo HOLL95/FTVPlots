@@ -46,7 +46,7 @@
             gap: 10px;
             position: absolute; /* Positioning to left-align */
             left: 20px; /* Distance from the left edge of the screen */
-            top: 360px; /* Distance from the top of the screen */
+            top: 380px; /* Distance from the top of the screen */
         }
         .panel {
             border: 2px solid #050505; /* Individual border around each panel */
@@ -215,17 +215,47 @@
         .spinner {
             /* ... spinner styles ... */
         }
+        .tab {
+            overflow: hidden;
+            border: 1px solid #ccc;
+            background-color: #f1f1f1;
+        }
+
+        .tab button {
+            background-color: inherit;
+            float: left;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 14px 16px;
+            transition: 0.3s;
+        }
+
+        .tab button:hover {
+            background-color: #ddd;
+        }
+
+        .tab button.active {
+            background-color: #ccc;
+        }
+
+        .tabcontent {
+            display: none;
+            padding: 6px 12px;
+            border: 1px solid #ccc;
+            border-top: none;
+        }
     </style>
 </head>
 <body>
     <h1>Fourier Transform Voltammetry Processing</h1>
+    <div class="tab">
+        <button class="tablinks" onclick="openTab(event, 'MainContent')" id="defaultOpen">Main Content</button>
+        <button class="tablinks" onclick="openTab(event, 'Instructions')">Instructions</button>
+    </div>
+    <div id="MainContent" class="tabcontent">
     <div class="global-options-container">
     <div class="dropdown-container", id="ddown">
-        <label for="experiment">Experiment:</label>
-        <select id="experiment" >
-            <option value="FTACV" selected>FTACV</option>
-            <option value="PSV">PSV</option>
-        </select>
         <label for="xaxis">X-axis:</label>
         <select id="xaxis" onchange="updateParameters()">
             <option value="Time">Time</option>
@@ -292,13 +322,61 @@
         <div id="graphs-container"></div>
     </div>
 </div>
+</div>
+<div id="Instructions" class="tabcontent">
+    <h2>Pointers</h2>
+    <p>This is a tool for plotting the harmonics of Fourier transform voltammetry data</p>
+    <h3>General considerations</h3>
+    <ul>
+        <li>The harmonics plotted by this tool represent a <i>processing</i> of the current-time-potential data provided by the potentiostat</li>
+        <li>More specifically, it uses a Fast Fourier transform algorithm (FFT) to obtain a discrete Fourier transform (DFT), select appropriate frequencies using a <a href="https://en.wikipedia.org/wiki/Top-hat_filter">top-hat filter</a> and perform an inverse FFT on the result</li>
+        <li>The code makes some assumptions about your data: it assumes that contained within your .csv or .txt file are columns of numerical current (Amps), potential (Volts) and time (seconds) values, and that the timestep is uniform.</li>
+        <li>There are a number of dials to turn as part of this process which affect the appearance of the final result. I have tried to make these availiable and explain them below</li>
+        <li>At some point, if you are plotting a lot of harmonics, you should probably try and implement it yourself to understand what is going on under the hood</li>
+        
+    </ul>
+    <h3>Global options (top panel)</h3>
+    <ol>
+        <li><strong>X-axis</strong> X-axis for the total current and harmonic plots. If time or potential are selected, the values will be from the provided file. If DC potential is selected (only useful for FTACV) then a textbox to enter the linear scan parameters will appear for each experiment. The code will attempt to approximate the appropriate value (start and reverse potentials and scan rate) but it is better if you enter these yourself</li>
+        <li><strong>Magnitude spectrum</strong> The bottom plot is the absolute value of the FFT (i.e. the norm of the complex number at each frequency bin), truncated to the frequency range defined by your harmonic selection. This option affects whether the Y-axis is on a logarithmic scale or not </li>
+        <li><strong>Current/Potential scaling</strong> Units which the current and potential are plotted and saved in (assuming the data is in amps/volts)</li>
+        <li><strong>Harmonic plot</strong> It is often useful to only plot the envelope (i.e. trace over the top) of the harmonics. This is only really meaningful for FTACV</li>
+        <li><strong>Apply Hanning window</strong> Whether or not to apply a Hanning window to remove ringing artefacts at the edge of the signal. Again only really useful for FTACV. <i>N.B. Experimentalists often really loathe this, as it introduces artefactual assymmetry to the harmonic peaks. You can sometimes get a similar reduction of the ringing artefacts with careful decimation.</i></li>
+        <li><strong>Enable saving</strong> Reveals the "Save data" button which will save everything on screen except the FFT into a CSV file for each experiment. Disabled by default for performance reasons</li>
+        <li><strong>Plot DC potential</strong> Only visible if "DC potential" is selected for the X-axis, and this controls whether to plot the calculated DC on the time-potential plot. </li>
+        <li><strong>Harmonic slider</strong> Minimum and maximum harmonics to plot</li>
 
+
+    </ol>
+    <h3>Experiment-specfic options</h3>
+    <ol>
+        <li><strong>Decimation</strong> The factor by which to decimate your data. The code uses a biquad filter to reduce aliasing artefacts. This is the main value which will affect the performance of the plotting software!</li>
+        <li><strong>Label</strong> Label for each experiment to appear on the graph legend</li>
+        <li><strong>Colour</strong> Self-explanatory</li>
+        <li><strong>Box size</strong> The width of the top-hat filter as a percentage of input frequency. Reducing this value from 100% can sometimes have a denosiing effect, but reduce it too much and you will lose harmonic signal</li>
+        <li><strong>Header length</strong> Often potentiostat files will have some non-numerical information above the column data. This option specifies how many lines to skip before the data starts</i></li>
+        <li><strong>Seperate potential file</strong> Backwards compatability for the "Monash" instrument, and requires upload of a "_cv_current" and "_cv_voltage" file instead of a .csv or .txt</li>
+        <li><strong>Input parameters: frequency</strong> Input frequency of the experiment - very important as this allows the code to find the harmonic peaks. If left empty will be calculated from the location of the largest harmonic in the FFT, which is pretty robust unless there is a very large DC compoenent. </li>
+        <li><strong>Input parameters: amplitude</strong> Has no effect on the actual behaviour of the code but the value provided is a good sense-check </li>
+        <li><strong>Input parameters: DC values</strong> Used to calculate the DC potential if a DC axis is specified above. If not provided the code will attempt to estimate them, but these estimates are much less robust than the ones provided for frequency and amplitude, so buyer beware. </li>
+
+
+    </ol>
+    <h3>Help?!</h3>
+    <ol>
+        <li>Check that the time-potential and time-current graphs look like the potential and current you expect</li>
+        <li>Check that the FFT looks sensible. On logarithmic mode you should see clear peaks eventually decreasing below the noise level. If this is not the case, it may be that the calculated frequency is very wrong, so check the appropriate box and try entering the one you set experimentally. Alternatively it could be because your data is not equally spaced in time. If this is the case, try interpolating your data onto a linear timescale.</li>
+        <li>If you are concerned about the effect of the options (you should be!) you can check the effect of the local ones by plotting the same file twice with different options</li>
+        <li>Some other error: email me at henry(dot)lloyd-laney(at)cs(dot)ox(dot)ac(dot)uk and send the offending file over. </li>
+
+    </ol>
+</div>
 </body>
-   
 
    
 </body>
 <script>
+    document.getElementById("defaultOpen").click();
     var datastore=[];
     var plotstore=[];
     var filesStorage=[]
@@ -329,6 +407,22 @@
     fromInput.oninput = () => controlFromInput(fromSlider, fromInput, toInput, toSlider);
     toInput.oninput = () => controlToInput(toSlider, fromInput, toInput, toSlider);
     // Initialize the global options when the DOM is fully loaded
+    function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+
+        // Get the element with id="defaultOpen" and click on it
+       
     function savecsvbutton(){
         const csvbox=document.getElementById("csvcheckbox")
         const csvbutton=document.getElementById("csvsave")
