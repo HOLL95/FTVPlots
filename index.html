@@ -330,7 +330,7 @@
     <ul>
         <li>The harmonics plotted by this tool represent a <i>processing</i> of the current-time-potential data provided by the potentiostat</li>
         <li>More specifically, it uses a Fast Fourier transform algorithm (FFT) to obtain a discrete Fourier transform (DFT), select appropriate frequencies using a <a href="https://en.wikipedia.org/wiki/Top-hat_filter">top-hat filter</a> and perform an inverse FFT on the result</li>
-        <li>The code makes some assumptions about your data: it assumes that contained within your .csv or .txt file are columns of numerical current (Amps), potential (Volts) and time (seconds) values, and that the timestep is uniform.</li>
+        <li>The code makes some assumptions about your data: it assumes that contained within your .csv or .txt file are columns of numerical current (Amps), potential (Volts) and time (seconds) values, and that the timestep is uniform. When you upload a .txt or .csv file, you will have to assign each of these variables an appopriate column</li>
         <li>There are a number of dials to turn as part of this process which affect the appearance of the final result. I have tried to make these available and explain them below</li>
         <li>At some point, if you are plotting a lot of harmonics, you should probably try and implement it yourself to understand what is going on under the hood</li>
         
