@@ -46,7 +46,7 @@
             gap: 10px;
             position: absolute; /* Positioning to left-align */
             left: 20px; /* Distance from the left edge of the screen */
-            top: 380px; /* Distance from the top of the screen */
+            top: 440px; /* Distance from the top of the screen */
         }
         .panel {
             border: 2px solid #050505; /* Individual border around each panel */
@@ -250,8 +250,8 @@
 <body>
     <h1>Fourier Transform Voltammetry Processing</h1>
     <div class="tab">
-        <button class="tablinks" onclick="openTab(event, 'MainContent')" id="defaultOpen">Main Content</button>
-        <button class="tablinks" onclick="openTab(event, 'Instructions')">Instructions</button>
+        <button class="tablinks" onclick="openTab(event, 'MainContent')" id="defaultOpen">Plotting</button>
+        <button class="tablinks" onclick="openTab(event, 'Instructions')">Pointers</button>
     </div>
     <div id="MainContent" class="tabcontent">
     <div class="global-options-container">
@@ -331,7 +331,7 @@
         <li>The harmonics plotted by this tool represent a <i>processing</i> of the current-time-potential data provided by the potentiostat</li>
         <li>More specifically, it uses a Fast Fourier transform algorithm (FFT) to obtain a discrete Fourier transform (DFT), select appropriate frequencies using a <a href="https://en.wikipedia.org/wiki/Top-hat_filter">top-hat filter</a> and perform an inverse FFT on the result</li>
         <li>The code makes some assumptions about your data: it assumes that contained within your .csv or .txt file are columns of numerical current (Amps), potential (Volts) and time (seconds) values, and that the timestep is uniform.</li>
-        <li>There are a number of dials to turn as part of this process which affect the appearance of the final result. I have tried to make these availiable and explain them below</li>
+        <li>There are a number of dials to turn as part of this process which affect the appearance of the final result. I have tried to make these available and explain them below</li>
         <li>At some point, if you are plotting a lot of harmonics, you should probably try and implement it yourself to understand what is going on under the hood</li>
         
     </ul>
@@ -341,7 +341,7 @@
         <li><strong>Magnitude spectrum</strong> The bottom plot is the absolute value of the FFT (i.e. the norm of the complex number at each frequency bin), truncated to the frequency range defined by your harmonic selection. This option affects whether the Y-axis is on a logarithmic scale or not </li>
         <li><strong>Current/Potential scaling</strong> Units which the current and potential are plotted and saved in (assuming the data is in amps/volts)</li>
         <li><strong>Harmonic plot</strong> It is often useful to only plot the envelope (i.e. trace over the top) of the harmonics. This is only really meaningful for FTACV</li>
-        <li><strong>Apply Hanning window</strong> Whether or not to apply a Hanning window to remove ringing artefacts at the edge of the signal. Again only really useful for FTACV. <i>N.B. Experimentalists often really loathe this, as it introduces artefactual assymmetry to the harmonic peaks. You can sometimes get a similar reduction of the ringing artefacts with careful decimation.</i></li>
+        <li><strong>Apply Hanning window</strong> Whether or not to apply a Hanning window to remove ringing artefacts at the edge of the signal. Again only really useful for FTACV. <i>N.B. Experimentalists often really loathe this, as it introduces artefactual asymmetry to the harmonic peaks. You can sometimes get a similar reduction of the ringing artefacts with careful decimation.</i></li>
         <li><strong>Enable saving</strong> Reveals the "Save data" button which will save everything on screen except the FFT into a CSV file for each experiment. Disabled by default for performance reasons</li>
         <li><strong>Plot DC potential</strong> Only visible if "DC potential" is selected for the X-axis, and this controls whether to plot the calculated DC on the time-potential plot. </li>
         <li><strong>Harmonic slider</strong> Minimum and maximum harmonics to plot</li>
@@ -353,10 +353,10 @@
         <li><strong>Decimation</strong> The factor by which to decimate your data. The code uses a biquad filter to reduce aliasing artefacts. This is the main value which will affect the performance of the plotting software!</li>
         <li><strong>Label</strong> Label for each experiment to appear on the graph legend</li>
         <li><strong>Colour</strong> Self-explanatory</li>
-        <li><strong>Box size</strong> The width of the top-hat filter as a percentage of input frequency. Reducing this value from 100% can sometimes have a denosiing effect, but reduce it too much and you will lose harmonic signal</li>
+        <li><strong>Box size</strong> The width of the top-hat filter as a percentage of input frequency. Reducing this value from 100% can sometimes have a denoising effect, but reduce it too much and you will lose harmonic signal</li>
         <li><strong>Header length</strong> Often potentiostat files will have some non-numerical information above the column data. This option specifies how many lines to skip before the data starts</i></li>
-        <li><strong>Seperate potential file</strong> Backwards compatability for the "Monash" instrument, and requires upload of a "_cv_current" and "_cv_voltage" file instead of a .csv or .txt</li>
-        <li><strong>Input parameters: frequency</strong> Input frequency of the experiment - very important as this allows the code to find the harmonic peaks. If left empty will be calculated from the location of the largest harmonic in the FFT, which is pretty robust unless there is a very large DC compoenent. </li>
+        <li><strong>Seperate potential file</strong> Backwards compatibility for the "Monash" instrument, and requires upload of a "_cv_current" and "_cv_voltage" file instead of a .csv or .txt</li>
+        <li><strong>Input parameters: frequency</strong> Input frequency of the experiment - very important as this allows the code to find the harmonic peaks. If left empty will be calculated from the location of the largest harmonic in the FFT, which is pretty robust unless there is a very large DC component. </li>
         <li><strong>Input parameters: amplitude</strong> Has no effect on the actual behaviour of the code but the value provided is a good sense-check </li>
         <li><strong>Input parameters: DC values</strong> Used to calculate the DC potential if a DC axis is specified above. If not provided the code will attempt to estimate them, but these estimates are much less robust than the ones provided for frequency and amplitude, so buyer beware. </li>
 
@@ -372,6 +372,7 @@
     </ol>
 </div>
 </body>
+
 
    
 </body>
