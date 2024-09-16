@@ -9,7 +9,6 @@ async function plot(event){
     
     
     // Get values from dropdowns
-    values.experiment = document.getElementById('experiment').value;
     values.xaxis = document.getElementById('xaxis').value;
     values.powerspectrum = document.getElementById('powerspectrum').value;
     values.currentscaling = document.getElementById('currentscaling').value;
