@@ -80,27 +80,29 @@ function handleFileChange(event) {
             const num_lines=lines.length;
             dataline=lines.slice(HeaderLen, num_lines-1)
             const toprow=dataline[0].split(/[\s,]+/).map(Number);
-            var noheaders=true;
-            toprow.forEach((value,colIndex) =>{
-                if (isNaN(value) && noheaders===true){
-                    alert(`Error: Not a number (${dataline[0].split(/[\s,]+/)[colIndex]}) found at column ${colIndex + 1}`);
-                    event.target.value = '';
-                    noheaders=false;
-                    return;
-                }
+            var noheaders = true;
+            toprow.forEach((value, colIndex) => {
+            if (isNaN(value) && noheaders === true) {
+                alert(`Error: Not a number (${dataline[0].trim().split(/[\s,]+/)[colIndex]}) found at column ${colIndex + 1}`);
+                event.target.value = '';
+                noheaders = false;
+                return;
+            }
             });
-            const dataArray = dataline.map(dataline => {
-                return dataline.split(/[\s,]+/).map(Number); // Split by spaces or commas, and convert to numbers
-                });
+
+            const dataArray = dataline.map(line => {
+            return line.trim().split(/[\s,]+/).filter(Boolean).map(Number);
+            });
+
             const firstLength = dataArray[0].length;
-            var data_valid=true;
-            
-            for (let i =1; i<dataArray.length; i++){
-                if (dataArray[i].length!==firstLength && data_valid===true){
-                    alert(`Error: Row ${i + 1} does not match the expected length of ${firstLength}, and is instead ${dataArray[i].length}`);
-                    event.target.value = '';
-                    data_valid=false;
-                    return;
+            var data_valid = true;
+            for (let i = 1; i < dataArray.length; i++) {
+            if (dataArray[i].length !== firstLength && data_valid === true) {
+                console.log(dataArray[i], dataline[i].trim().split(/[\s,]+/), dataline[i]);
+                alert(`Error: Row ${i + 1} does not match the expected length of ${firstLength}, and is instead ${dataArray[i].length}.\n\nRow contents: ${dataline[i].trim()}`);
+                event.target.value = '';
+                data_valid = false;
+                return;
                 }
             }
 
